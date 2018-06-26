@@ -11,12 +11,11 @@ if( !file_exists( $filename ) )
     $default_image = 'no_image.png';
     $filename = $media_folder . $default_image;
 }
-$ext = explode( '.' , $_REQUEST['file'] );
-$ext = $ext[ count( $ext )-1 ];
 $aa = getimagesize( $filename );
 $width = $aa[0];
 $height = $aa[1];
 $mime = $aa['mime'];
+$ext = explode('/' , $mime)[1];
 // HEADERS FROM CONTENT TYPE AND CACHE-CONTROL AND BROWSER CACHING
 header('Pragma: public');
 header('Cache-Control: max-age=604800');
