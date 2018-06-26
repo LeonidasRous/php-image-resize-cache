@@ -1,0 +1,17 @@
+Options +FollowSymLinks
+
+<IfModule mod_rewrite.c>
+	RewriteEngine on
+	#Replace url_handler.php for your filename
+	#that will handle the redirections.
+
+#IMAGES
+RewriteRule ^([0-9]+)/([0-9]+)/(.*)$ images.php?hsize=$1&wsize=$2&file=$3
+
+
+
+
+
+</IfModule>
+
+#ErrorDocument 404 /error.php
