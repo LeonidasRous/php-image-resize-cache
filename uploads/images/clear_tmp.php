@@ -1,9 +1,19 @@
 <?php
+$tmp_folder = 'tmp/';
 
-$files = glob('tmp/*'); // get all file names
+$search = '*';
+
+if(isset($_REQUEST['start_with'])){
+    $search = $_REQUEST['start_with'] . $search;
+}
+
+if(isset($_REQUEST['end_with'])){
+    $search .= $_REQUEST['end_with'];
+}
+
+$files = glob($tmp_folder . $search ); // get all file names
 foreach($files as $file){ // iterate files
     if(is_file($file)){
-
         $a=date("d-m-Y H:i:s", filemtime($file));
 
         if(isset($_REQUEST['clear']) && $_REQUEST['clear']=='all'){
