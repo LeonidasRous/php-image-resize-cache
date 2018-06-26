@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fca38bf6-99f4-4574-87ed-6f85025f687a" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/uploads/images/.htaccess" afterPath="$PROJECT_DIR$/uploads/images/.htaccess" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -96,12 +94,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1530015645936</updated>
-      <workItem from="1530015647323" duration="451000" />
+      <workItem from="1530015647323" duration="527000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="451000" />
+    <option name="totallyTimeSpent" value="527000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1973" y="-4" width="1867" height="1084" extended-state="6" />
