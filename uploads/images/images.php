@@ -11,6 +11,13 @@ if( !file_exists( $filename ) )
     $default_image = 'no_image.png';
     $filename = $media_folder . $default_image;
 }
+//if image is svg
+if($ext == 'svg'){
+    header('Content-type: image/svg+xml');
+    $file = file_get_contents($filename);
+    echo $file;
+    exit;
+}
 $aa = getimagesize( $filename );
 $width = $aa[0];
 $height = $aa[1];
