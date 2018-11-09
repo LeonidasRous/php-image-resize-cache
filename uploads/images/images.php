@@ -46,43 +46,67 @@ if( file_exists( $tmp_folder . $tmpimagename ) && ( !isset( $_REQUEST['decache']
  *
  *  CALCULATE THE SIZE OF THE IMAGE
  *
- *  IF `hsize` AND `wsize` ARE BIGGER THAN ZERO THEN THE IMAGE STRETCHED TO EXACTLY THIS SIZE
- *  ELSE IF ONE OF THEM IS ZERO THEN THE WIDTH OR HEIGHT OF THE IMAGE WILL BE THE SETTED SIZE AND THE OTHER WILL BE CALCULATED WITH THE IMAGE RATIO
+ *  IF `hsize` AND `wsize` ARE BIGGER THAN ZERO THEN THE IMAGE CROPED TO EXACTLY THIS SIZE
+ *  ELSE IF WIDTH IS ZERO THEN THE HEIGHT OF THE IMAGE WILL BE THE SETTED SIZE AND THE OTHER WILL BE CALCULATED WITH THE IMAGE RATIO
+ *  ELSE IF HEIGHT IS ZERO THEN THE WIDTH OF THE IMAGE WILL BE THE SETTED SIZE AND THE OTHER WILL BE CALCULATED WITH THE IMAGE RATIO
  *  ELSE IF BOTH OF THEM IS ZERO THE IMAGE WILL BE TO HIS ORIGINAL SIZE
  *
  * */
 
+$b=1;
+$new_width = $width * $b;
+$new_height = $height * $b;
+$cropImage = 0;
 if( $_REQUEST['hsize'] > 0 && $_REQUEST['wsize'] > 0 )
 {
-    $new_width = $_REQUEST['wsize'];
-    $new_height = $_REQUEST['hsize'];
-}
-else if( $_REQUEST['hsize'] > 0 && $_REQUEST['wsize'] == 0 )
-{
-    if ( $width > $height )
+    $cropImage = 1;
+    $thumb_width = $_REQUEST['wsize'];
+    $thumb_height = $_REQUEST['hsize'];
+
+    $original_aspect = $width / $height;
+    $thumb_aspect = $thumb_width / $thumb_height;
+
+    if ( $original_aspect >= $thumb_aspect )
     {
-        $a = 100 * $_REQUEST['hsize'];
-        $b = $a / $width;
-        $b = $b / 100;
+        // If image is wider than thumbnail (in aspect ratio sense)
+        $new_height = $thumb_height;
+        $new_width = $width / ($height / $thumb_height);
     }
     else
     {
-        $a = 100 * $_REQUEST['hsize'];
-        $b = $a / $height;
-        $b = $b / 100;
+        // If the thumbnail is wider than the image
+        $new_width = $thumb_width;
+        $new_height = $height / ($width / $thumb_width);
     }
-    $new_width = $width * $b;
-    $new_height = $height * $b;
+
 }
-else
+else if( $_REQUEST['hsize'] > 0 && $_REQUEST['wsize'] == 0 )
 {
-    $b=1;
+
+    $a = 100 * $_REQUEST['hsize'];
+    $b = $a / $height;
+    $b = $b / 100;
     $new_width = $width * $b;
     $new_height = $height * $b;
+
+}
+else if( $_REQUEST['wsize'] > 0 && $_REQUEST['hsize'] == 0 )
+{
+
+    $a = 100 * $_REQUEST['wsize'];
+    $b = $a / $width;
+    $b = $b / 100;
+    $new_width = $width * $b;
+    $new_height = $height * $b;
+
 }
 
 // Resample
-$image_p = imagecreatetruecolor( $new_width , $new_height );
+if( $cropImage == 1 ) {
+    $image_p = imagecreatetruecolor($thumb_width, $thumb_height);
+} else {
+    $image_p = imagecreatetruecolor($new_width, $new_height);
+}
 imagealphablending( $image_p , false );
 $transparency = imagecolorallocatealpha( $image_p, 0, 0, 0, 127);
 imagefill( $image_p, 0, 0, $transparency );
@@ -103,8 +127,11 @@ switch ( $ext ) {
         $image = false;
         break;
 }
-imagecopyresampled($image_p, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
-
+if( $cropImage == 1 ) {
+    imagecopyresampled($image_p, $image, 0 - ($new_width - $thumb_width) / 2, 0 - ($new_height - $thumb_height) / 2, 0, 0, $new_width, $new_height, $width, $height);
+} else {
+    imagecopyresampled($image_p, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+}
 // Output
 switch ( $ext ) {
     case 'jpg':
